@@ -35,7 +35,8 @@ void ATankPlayerController::AimTowardsCrosshair()
 	FVector HitLocation;//внешний параметр
 	if (GetSightRayHitLocation(HitLocation)) 
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *HitLocation.ToString());
+		//получаем контролируемый танк и прецеливаемся на место попадания
+		GetControlledTank()->AimAt(HitLocation);
 	}
 }
 
@@ -44,7 +45,43 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 	int32 VieportSizeX, VieportSizeY;
 	GetViewportSize(VieportSizeX, VieportSizeY);
 	auto ScreenLocation = FVector2D(VieportSizeX * CrossHairXLocation, VieportSizeY * CrossHairYLocation);
-	UE_LOG(LogTemp, Warning, TEXT("ScreenLocation: %s"), *ScreenLocation.ToString());
+
+	FVector LookDirection;
+	if (GetLookDirection(ScreenLocation, LookDirection))
+	{
+		GetLookVectorHitLocation(LookDirection, HitLocation);
+	}
 
 	return true;
+}
+
+//Направление в которое смотрим
+bool ATankPlayerController::GetLookDirection(FVector2D& ScreenLocation, FVector& LookDirection) const
+{
+	FVector CameraWorldLocation;
+	return DeprojectScreenPositionToWorld(
+		ScreenLocation.X,
+		ScreenLocation.Y,
+		CameraWorldLocation,
+		LookDirection
+	);
+}
+
+bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const
+{
+	FHitResult HitResult;
+	auto StartLocation = PlayerCameraManager->GetCameraLocation();
+	auto EndLocation = StartLocation + (LookDirection * LineTraceRange);
+	if (GetWorld()->LineTraceSingleByChannel(
+		HitResult, 
+		StartLocation, 
+		EndLocation, 
+		ECollisionChannel::ECC_Visibility)
+		)
+	{
+		HitLocation = HitResult.Location;
+		return true;
+	}
+	HitLocation = FVector(0);
+	return false;
 }
