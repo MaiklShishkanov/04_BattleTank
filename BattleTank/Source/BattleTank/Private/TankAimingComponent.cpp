@@ -8,6 +8,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
+
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
@@ -31,6 +32,9 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LounchSpeed)
 		StartLocation,
 		HitLocation,
 		LounchSpeed,
+		false,
+		0,
+		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace
 	);
 	if (bHaveAimSolution)
@@ -38,8 +42,16 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LounchSpeed)
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		auto TankName = GetOwner()->GetName();
 		MoveBarrelTowards(AimDirection);
+		auto Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("%f yes"), Time);
+	}
+	else
+	{
+		auto Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("%f not"), Time);
 	}
 }
+//двигает пушку
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
@@ -47,6 +59,5 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	//разница между вектором прицеливания и положением пушки
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 	
-
-	Barrel->Elevate(5);
+	Barrel->Elevate(DeltaRotator.Pitch);
 }
