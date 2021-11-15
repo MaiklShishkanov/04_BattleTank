@@ -15,7 +15,7 @@ class BATTLETANK_API UTankBarrel : public UStaticMeshComponent
 	GENERATED_BODY()
 	
 public:
-	//- знак значение скорости опускает пушку, + знак значение скорости поднимает пушку
+	//-1 знак значение скорости опускает пушку, +1 знак значение скорости поднимает пушку
 	void Elevate(float RelativeSpeed);
 
 private:

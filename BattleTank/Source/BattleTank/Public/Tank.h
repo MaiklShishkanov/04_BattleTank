@@ -21,6 +21,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetBarrelReference(UTankBarrel* BarrelToSet);
 
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetTurretReference(UTankTurret* TurretToSet);
+
 private:
 	// Sets default values for this pawn's properties
 	ATank();
@@ -36,5 +39,5 @@ private:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere, Category = Firing)
-	float LounchSpeed = 100000; // стартовая скорость снаряда 1000 m/s
+	float LounchSpeed = 4000; // стартовая скорость снаряда
 };
