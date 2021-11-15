@@ -9,6 +9,7 @@
 //предварительные объявление Forward Diclaration
 class UTankBarrel;
 class UTankAimingComponent;
+class AProjectile;
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -23,6 +24,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetTurretReference(UTankTurret* TurretToSet);
+
+	UFUNCTION(BlueprintCallable, Category = Firing)
+	void Fire();
 
 private:
 	// Sets default values for this pawn's properties
@@ -40,4 +44,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Firing)
 	float LounchSpeed = 4000; // стартовая скорость снаряда
+
+	UPROPERTY(EditAnywhere, Category = Setup)
+	TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	UTankBarrel* Barrel = nullptr; //локальная ссылка на ствол для порождения снарядов
 };

@@ -48,16 +48,9 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LounchSpeed)
 	if (bHaveAimSolution)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
-		auto TankName = GetOwner()->GetName();
 		MoveBarrelTowards(AimDirection);
-		auto Time = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("%f yes"), Time);
 	}
-	else
-	{
-		auto Time = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("%f not"), Time);
-	}
+	//прицеливание не найдено
 }
 //двигает пушку
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
