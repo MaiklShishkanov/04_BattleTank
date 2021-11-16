@@ -42,11 +42,16 @@ private:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float LounchSpeed = 4000; // стартовая скорость снаряда
 
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float ReloadTimeInSeconds = 3; //время перезарядки между выстрелами AI
+
 	UTankBarrel* Barrel = nullptr; //локальная ссылка на ствол для порождения снарядов
+
+	double LastFireTime = 0;
 };
