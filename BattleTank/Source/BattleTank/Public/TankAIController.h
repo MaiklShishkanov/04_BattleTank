@@ -22,4 +22,6 @@ private:
 
 	virtual void Tick(float DeltaTime) override;
 
+	//как близко танк искуственного интелекта может подобраться к игроку
+	float AcceptanceRadius = 3000;
 };
