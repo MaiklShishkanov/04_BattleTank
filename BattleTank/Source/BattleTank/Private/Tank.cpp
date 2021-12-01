@@ -1,7 +1,6 @@
 // Mikhail V
 
 #include "TankAimingComponent.h"
-#include "TankMovementComponent.h"
 #include "Tank.h"
 #include "TankBarrel.h"
 #include "Projectile.h"
@@ -19,18 +18,23 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();//понадобился для запуска beginplay в BP
+
+	auto TankName = GetName();
+	UE_LOG(LogTemp, Warning, TEXT("%s DONKEY: Tank C++ BeginPlay"), *TankName)
 }
 
 void ATank::AimAt(FVector HitLocation)
 {
-	if (!TankAimingComponent) { return; }
+	if (!ensure(TankAimingComponent)) { return; }
 	TankAimingComponent->AimAt(HitLocation, LounchSpeed);
 }
 
 void ATank::Fire()
 {
+	if (!ensure(Barrel)) { return; }
 	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
-	if (Barrel && isReloaded)
+
+	if (isReloaded)
 	{
 
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(
