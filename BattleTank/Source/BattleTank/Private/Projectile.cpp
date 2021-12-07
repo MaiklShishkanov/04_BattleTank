@@ -28,6 +28,6 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::LaunchProjectile(float Speed)
 {
-	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed/*дает езначальную векторную скорость запуска*/);
+	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed/*дает изначальную векторную скорость запуска*/);
 	ProjectileMovement->Activate();
 }
