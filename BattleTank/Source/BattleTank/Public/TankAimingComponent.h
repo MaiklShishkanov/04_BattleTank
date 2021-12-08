@@ -14,45 +14,47 @@ enum class EFiringState : uint8
 	Aiming,
 	Locked
 };
-
-class UTankBarrel; //предварительное объявление Forward Diclaration
+// Forward Declaration
+class UTankBarrel;
 class UTankTurret;
 class AProjectile;
-
-//содержит параметры ствола и метод Elevate
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+// Holds barrel's properties and Elevate method
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class BATTLETANK_API UTankAimingComponent : public UActorComponent
 {
 	GENERATED_BODY()
-
-public:	
+public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
+		void Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
-public:	
 	void AimAt(FVector HitLocation);
 	UFUNCTION(BlueprintCallable, Category = "Firing")
-	void Fire();
-
+		void Fire();
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringState FiringState = EFiringState::Aiming;
-
+		EFiringState FiringState = EFiringState::Reloading;
 private:
+	// Sets default values for this component's properties
 	UTankAimingComponent();
+	virtual void BeginPlay() override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void MoveBarrelTowards(FVector AiDirection);
+
+	bool IsBarrelMoving();
 
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 
-	void MoveBarrelTowards(FVector AimDirection);
-	double LastFireTime = 0;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float LounchSpeed = 4000; // стартовая скорость снаряда
-
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float ReloadTimeInSeconds = 3; //время перезарядки между выстрелами AI
+		float LaunchSpeed = 4000;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<AProjectile> ProjectileBlueprint;
+		TSubclassOf<AProjectile> ProjectileBlueprint;
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+		float ReloadTimeInSeconds = 3;
+
+	double LastFireTime = 0;
+
+	FVector AimDirection;
 };
