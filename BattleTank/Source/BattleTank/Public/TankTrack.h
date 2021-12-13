@@ -20,5 +20,19 @@ public:
 	void SetThrottle(float Throttle);
 	//это мксимальная сила на гусеницу в Ньютанах
 	UPROPERTY(EditDefaultsOnly)
-		float TrackMaxDrivingForce = 400000;//масса танка 40 тонн и ускорение в 1g
+	float TrackMaxDrivingForce = 3000000;//масса танка 40 тонн и ускорение в 1g
+
+private:
+	UTankTrack();
+
+	void ApplySidewaysForce();
+
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
+	void DriveTrack();
+
+	float CurrentThrottle = 0;
 };
